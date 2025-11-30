@@ -1,0 +1,32 @@
+## December Progress Dashboard README
+
+This repository deploys a static 800×480 high-contrast dashboard optimized for TRMNL e-ink displays via the Screenshot plugin, tracking 30-day December velocity in coding (300 problems), health (20 workouts), and AI learning (30 videos).  It features three line graphs per metric: a straight expected velocity line from Dec 1 (day 1) to Dec 30, overlaid with actual progress points updated via simple daily inputs; status subtly notes if on/under/over track with an adapted Elo score (formula: \( R' = R + K \times (S - E) \), where \( R \) starts at 1500, \( K=32 \), \( S = 1 \) if daily actual ≥ expected else 0, \( E = 1 / (1 + 10^{(expected - actual)/400}) \); brackets show "increase" if \( R' > R \), "drop" otherwise).[1][2][3][4]
+
+**Initial Data (Dec 1 Complete):** Workout: 1 (target pace 20/30 ≈0.667, on track, Elo 1519 increase), Coding: 5 (target 300/30=10, under, Elo 1481 drop), AI Videos: 2 (target 30/30=1, over, Elo 1523 increase).
+
+## Quick Setup
+
+- Fork or clone from [cdartcodes/dashboard](https://github.com/cdartcodes/dashboard) as base template.[5]
+- Edit `index.html`: Set viewport `<meta name="viewport" content="width=800, initial-scale=1">`, use CSS `body { margin:0; background:black; color:white; font-family:monospace; height:480px; overflow:hidden; }` for high contrast, no animations.
+- Include Chart.js CDN `<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>` for static line graphs (three canvases stacked vertically, each ~250px height).
+- Define data arrays in JS: `expectedHealth = [0.667,1.333,...30]; actualHealth = [1,NaN,...];` (repeat for others); plot lines with `new Chart(ctx, {type:'line', data:{labels:['D1','D2',...], datasets:[{label:'Expected', data:expected,... borderColor:'white'}, {label:'Actual', data:actual, borderColor:'lime'}]}});`.
+- Add input forms below graphs: `<input id="healthIn" type="number"><button onclick="update('health')">Log</button>` with `function update(area) { actual[parseInt(daySel.value)-1] = parseFloat(inp.value); chart.update('none'); calcElo(area); }` for silent redraws.
+
+## TRMNL Integration
+
+Host on GitHub Pages/Netlify for public URL (e.g., username.github.io/dashboard).  In TRMNL app, add private Screenshot plugin: set URL to your page, enable "absolute source paths", poll every 5-15min; device renders screenshot at 800×480 monochrome.  For persistence, store data in `localStorage` keyed by date; on load, parse Dec 1 inputs as seeded above.[1][6][4]
+
+## Usage and Updates
+
+View on TRMNL for glanceable progress; log daily via desktop/mobile before refresh. Extend with Elo display: post-graph `<div id="healthStatus">On track (Elo:1519 increase)</div>`, update via formula on input. Targets scale linearly: health ~0.67/day, coding 10/day, AI 1/day.  Deploy: `git push` triggers instant update.
+
+[1](https://help.usetrmnl.com/en/articles/10546870-compare-custom-plugin-types)
+[2](https://en.wikipedia.org/wiki/Elo_rating_system)
+[3](https://en.wikipedia.org/wiki/Elo_rating)
+[4](https://usetrmnl.com/integrations/screenshot)
+[5](https://github.com/dashboardcode)
+[6](https://wbrowar.com/article/code/trmnl-craft-cms-screenshot)
+[7](https://www.youtube.com/watch?v=X8pmFJFUrBg)
+[8](https://www.youtube.com/watch?v=Ofb-mp_x_gM)
+[9](https://github.com/topics/dashboards)
+[10](https://usetrmnl.com)
